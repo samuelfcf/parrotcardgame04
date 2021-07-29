@@ -40,8 +40,9 @@ body {
   border-radius: 5px;
 }
 
-.container .game .card .front-card {
+.container .game .card .front-card, .back-card {
   margin: 24px 10px;
 }
+
 
 

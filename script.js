@@ -57,9 +57,12 @@ const baralho = [
   }
 ];
 
+let jogadas = 0;
+let paresAchados = 0;
 let cards = [];
 let cardsSort = [];
 let escolhidas = [];
+let tabuleiro = document.querySelector(".game");
 
 function loadGame() {
 
@@ -69,7 +72,7 @@ function loadGame() {
     numCartas = Number(prompt("Digite com quantas quartas vc quer jogar. (4 a 14, valores pares)."));
   }
 
-  let tabuleiro = document.querySelector(".game");
+
   for(let i = 0; i < numCartas; i++) {
     if(i % 2 == 0) {
       cards.push(baralho[i]);
@@ -91,11 +94,13 @@ function loadGame() {
 }
 
 function pickCard(carta) {
-  
+
   carta.src = cardsSort[carta.id].image;
   escolhidas.push(carta);
 
   if(escolhidas.length === 2) {
+    jogadas++;
+
     setTimeout(() => {
       let carta1 = escolhidas[0];
       let carta2 = escolhidas[1];
@@ -104,16 +109,27 @@ function pickCard(carta) {
       if(carta1.name === carta2.name) {
         carta1.removeEventListener("click", pickCard);
         carta2.removeEventListener("click", pickCard);
-        alert("iguais!!")
+        paresAchados++;
       } else {
         carta1.src = "/assets/front.png";
         carta2.src = "/assets/front.png";
       }
 
+      if(paresAchados === cardsSort.length/2) {
+        alert(`Parabéns! Você ganhou em ${jogadas} jogadas.`);
+        let reiniciarGame = prompt("quer jogar novamente? (s ou n)");
+        if(reiniciarGame === "s") {
+          tabuleiro.innerHTML = "";
+          cards = [];
+          cardsSort = [];
+          escolhidas = [];
+          paresAchados = 0;
+          jogadas = 0;
+          loadGame();
+        }
+      }
       escolhidas = [];
-    }, 1000)
+    }, 1000);
   }
-
 }
- 
 
