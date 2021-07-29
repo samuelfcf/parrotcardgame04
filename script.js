@@ -68,29 +68,25 @@ function loadGame() {
   while(numCartas %2 != 0 || numCartas < 4 || numCartas > 14) {
     numCartas = Number(prompt("Digite com quantas quartas vc quer jogar. (4 a 14, valores pares)."));
   }
-  
+
   let tabuleiro = document.querySelector(".game");
-  let cont = 0;
-  let cont2 = 0;
-  while(cont != numCartas) {
-    if(cont % 2 == 0) {
-      cards.push(baralho[cont]);
+  for(let i = 0; i < numCartas; i++) {
+    if(i % 2 == 0) {
+      cards.push(baralho[i]);
     } else {
-      cards.push(baralho[cont]);
+      cards.push(baralho[i]);
     }
-    cont++;
   }
 
   cardsSort = cards.sort(() => {
     return Math.random() - 0.5;
   });
 
-  while (cont2 < cards.length) {
+  for(let i=0; i < cards.length; i++) {
     tabuleiro.innerHTML += `
     <div class="card">
-    <img class="front-card" id="${cont2}" name="${cardsSort[cont2].name}" src="/assets/front.png" alt="frontcard" onclick="pickCard(this)">
+    <img class="front-card" id="${i}" name="${cardsSort[i].name}" src="/assets/front.png" alt="frontcard" onclick="pickCard(this)">
    </div>`
-   cont2++;
   }
 }
 
@@ -106,8 +102,8 @@ function pickCard(carta) {
       console.log(escolhidas);
 
       if(carta1.name === carta2.name) {
-        carta1.removeEventListener("click", escolherCarta);
-        carta2.removeEventListener("click", escolherCarta);
+        carta1.removeEventListener("click", pickCard);
+        carta2.removeEventListener("click", pickCard);
         alert("iguais!!")
       } else {
         carta1.src = "/assets/front.png";
