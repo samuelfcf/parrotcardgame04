@@ -87,20 +87,22 @@ function loadGame() {
 
   for(let i=0; i < cards.length; i++) {
     tabuleiro.innerHTML += `
-    <div class="card">
-    <img class="front-card" id="${i}" name="${cardsSort[i].name}" src="/assets/front.png" alt="frontcard" onclick="pickCard(this)">
+    <div class="card" onclick="pickCard(this)">
+     <img class="front-card" id="${i}" name="${cardsSort[i].name}" src="/assets/front.png" alt="frontcard"">
    </div>`
   }
 }
 
 function pickCard(carta) {
-
-  carta.src = cardsSort[carta.id].image;
-  escolhidas.push(carta);
+  const imgCarta = carta.children[0];
+  escolhidas.push(imgCarta);
 
   if(escolhidas.length === 2) {
     jogadas++;
-
+    escolhidas.forEach(carta => {
+      carta.src = cardsSort[carta.id].image;
+    });
+    
     setTimeout(() => {
       let carta1 = escolhidas[0];
       let carta2 = escolhidas[1];
@@ -116,8 +118,12 @@ function pickCard(carta) {
       }
 
       if(paresAchados === cardsSort.length/2) {
+        endGame = true;
         alert(`Parabéns! Você ganhou em ${jogadas} jogadas.`);
         let reiniciarGame = prompt("quer jogar novamente? (s ou n)");
+        while (reiniciarGame !== "s" && reiniciarGame !== "n") {
+          reiniciarGame = prompt("quer jogar novamente? (s ou n)");
+        }
         if(reiniciarGame === "s") {
           tabuleiro.innerHTML = "";
           cards = [];
@@ -132,4 +138,3 @@ function pickCard(carta) {
     }, 1000);
   }
 }
-
