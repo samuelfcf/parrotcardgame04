@@ -38,9 +38,30 @@ body {
   width: 117px;
   background-color:#A7E9AF;
   border-radius: 5px;
+  position: relative;
 }
 
 .container .game .card .front-card, .back-card {
   margin: 24px 10px;
+}
+
+
+.container .game .card .face {
+  position: absolute;
+  backface-visibility: hidden;
+  transition: all .5s;
+  transform-style: preserve-3d;
+}
+
+.back-card {
+  transform: rotateY(180deg);
+}
+
+.card.flip .back-card {
+  transform: rotateY(0deg);
+}
+
+.card.flip .front-card {
+  transform: rotateY(-180deg);
 }
 

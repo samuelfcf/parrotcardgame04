@@ -88,33 +88,39 @@ function loadGame() {
   for(let i=0; i < cards.length; i++) {
     tabuleiro.innerHTML += `
     <div class="card" onclick="pickCard(this)">
-     <img class="front-card" id="${i}" name="${cardsSort[i].name}" src="/assets/front.png" alt="frontcard"">
+     <img class="front-card face" id="${i}" name="${cardsSort[i].name}" src="/assets/front.png" alt="frontcard"">
    </div>`
   }
+
+  let divsGame = document.querySelectorAll(".card");
+  divsGame.forEach(div => {
+    div.setAttribute("onclick", 'pickCard(this)');
+  });
 }
 
 function pickCard(carta) {
+  escolhidas.push(carta);
   const imgCarta = carta.children[0];
-  escolhidas.push(imgCarta);
+  carta.innerHTML += `<img class="back-card face" id="${imgCarta.id}" src="${cardsSort[imgCarta.id].image}" />`
 
   if(escolhidas.length === 2) {
-    jogadas++;
     escolhidas.forEach(carta => {
-      carta.src = cardsSort[carta.id].image;
-    });
-    
-    setTimeout(() => {
-      let carta1 = escolhidas[0];
-      let carta2 = escolhidas[1];
-      console.log(escolhidas);
+      carta.classList.add("flip");
+    })
+    jogadas++;
 
-      if(carta1.name === carta2.name) {
-        carta1.removeEventListener("click", pickCard);
-        carta2.removeEventListener("click", pickCard);
+    setTimeout(() => {
+      const carta1 = escolhidas[0];
+      const carta2 = escolhidas[1];
+
+      if(carta1.children[0].name === carta2.children[0].name) {   
+        carta1.removeAttribute("onclick")
+        carta2.removeAttribute("onclick");
+        console.log(carta1,carta2);
         paresAchados++;
       } else {
-        carta1.src = "/assets/front.png";
-        carta2.src = "/assets/front.png";
+        carta1.classList.remove("flip");
+        carta2.classList.remove("flip");
       }
 
       if(paresAchados === cardsSort.length/2) {
