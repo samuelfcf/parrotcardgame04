@@ -1,6 +1,6 @@
 <h1 align="center">Parrot Game</h1>  
 
-<h1>
+<h1 align="center">
   <img src="assets/parrotgame.gif"></img>
 </h1>
 
