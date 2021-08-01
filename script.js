@@ -1,4 +1,4 @@
-const baralho = [
+const deck = [
   {
     name: "bobrossparrot",
     image: "assets/bobrossparrot.gif"
@@ -57,27 +57,29 @@ const baralho = [
   }
 ];
 
-let jogadas = 0;
-let paresAchados = 0;
+let plays = 0;
+let foundPairs = 0;
+let idStopwatch;
+let stopwatch;
 let cards = [];
 let cardsSort = [];
-let escolhidas = [];
-let tabuleiro = document.querySelector(".game");
+let chosenByMove = [];
+let game = document.querySelector(".game");
 
 function loadGame() {
+  stopwatch = 0;
+  let numCards = Number(prompt("Digite com quantas quartas vc quer jogar. (4 a 14, valores pares)."));
 
-  let numCartas = Number(prompt("Digite com quantas quartas vc quer jogar. (4 a 14, valores pares)."));
-
-  while(numCartas %2 != 0 || numCartas < 4 || numCartas > 14) {
-    numCartas = Number(prompt("Digite com quantas quartas vc quer jogar. (4 a 14, valores pares)."));
+  while(numCards %2 != 0 || numCards < 4 || numCards > 14) {
+    numCards = Number(prompt("Digite com quantas quartas vc quer jogar. (4 a 14, valores pares)."));
   }
 
 
-  for(let i = 0; i < numCartas; i++) {
+  for(let i = 0; i < numCards; i++) {
     if(i % 2 == 0) {
-      cards.push(baralho[i]);
+      cards.push(deck[i]);
     } else {
-      cards.push(baralho[i]);
+      cards.push(deck[i]);
     }
   }
 
@@ -86,61 +88,69 @@ function loadGame() {
   });
 
   for(let i=0; i < cards.length; i++) {
-    tabuleiro.innerHTML += `
-    <div class="card" onclick="pickCard(this)">
-     <img class="front-card face" id="${i}" name="${cardsSort[i].name}" src="/assets/front.png" alt="frontcard"">
+    game.innerHTML += `
+    <div class="card">
+     <img class="back-card face" id="${i}" name="${cardsSort[i].name}" src="/assets/front.png" alt="frontcard"">
    </div>`
   }
 
-  let divsGame = document.querySelectorAll(".card");
-  divsGame.forEach(div => {
+  let card = document.querySelectorAll(".card");
+  card.forEach(div => {
     div.setAttribute("onclick", 'pickCard(this)');
   });
+
+  idStopwatch = setInterval(() => {
+    stopwatch += 1;
+    document.querySelector(".counter").innerHTML = `tempo: ${stopwatch}s`;
+  }, 1000);
 }
 
-function pickCard(carta) {
-  escolhidas.push(carta);
-  const imgCarta = carta.children[0];
-  carta.innerHTML += `<img class="back-card face" id="${imgCarta.id}" src="${cardsSort[imgCarta.id].image}" />`
+function pickCard(card) {
+  chosenByMove.push(card);
+  const imgCard = card.children[0];
+  card.innerHTML += `<img class="front-card face" id="${imgCard.id}" src="${cardsSort[imgCard.id].image}" />`
 
-  if(escolhidas.length === 2) {
-    escolhidas.forEach(carta => {
+  if(chosenByMove.length === 2) {
+    chosenByMove.forEach(carta => {
       carta.classList.add("flip");
     })
-    jogadas++;
+    plays++;
 
     setTimeout(() => {
-      const carta1 = escolhidas[0];
-      const carta2 = escolhidas[1];
+      const carta1 = chosenByMove[0];
+      const carta2 = chosenByMove[1];
 
       if(carta1.children[0].name === carta2.children[0].name) {   
         carta1.removeAttribute("onclick")
         carta2.removeAttribute("onclick");
-        console.log(carta1,carta2);
-        paresAchados++;
+        foundPairs++;
       } else {
         carta1.classList.remove("flip");
         carta2.classList.remove("flip");
       }
 
-      if(paresAchados === cardsSort.length/2) {
-        endGame = true;
-        alert(`Parabéns! Você ganhou em ${jogadas} jogadas.`);
-        let reiniciarGame = prompt("quer jogar novamente? (s ou n)");
-        while (reiniciarGame !== "s" && reiniciarGame !== "n") {
-          reiniciarGame = prompt("quer jogar novamente? (s ou n)");
+      if(foundPairs === cardsSort.length/2) {
+        alert(`Parabéns! Você ganhou com ${plays} jogadas em ${stopwatch} segundos.`);
+        clearInterval(idStopwatch);
+
+        let restartGame = prompt("quer jogar novamente? (s ou n)");
+        while (restartGame !== "s" && restartGame !== "n") {
+          restartGame = prompt("quer jogar novamente? (s ou n)");
         }
-        if(reiniciarGame === "s") {
-          tabuleiro.innerHTML = "";
+        if(restartGame === "s") {
+          stopwatch = 0;
+          game.innerHTML = "";
           cards = [];
           cardsSort = [];
-          escolhidas = [];
-          paresAchados = 0;
-          jogadas = 0;
+          chosenByMove = [];
+          foundPairs = 0;
+          plays = 0;
           loadGame();
         }
       }
-      escolhidas = [];
+      chosenByMove = [];
     }, 1000);
   }
 }
+
+
