@@ -74,7 +74,6 @@ function loadGame() {
     numCards = Number(prompt("Digite com quantas quartas vc quer jogar. (4 a 14, valores pares)."));
   }
 
-
   for(let i = 0; i < numCards; i++) {
     if(i % 2 == 0) {
       cards.push(deck[i]);
@@ -107,7 +106,7 @@ function loadGame() {
 
 function pickCard(card) {
   chosenByMove.push(card);
-  const imgCard = card.children[0];
+  const imgCard = card.querySelector(".face");
   card.innerHTML += `<img class="front-card face" id="${imgCard.id}" src="${cardsSort[imgCard.id].image}" />`
 
   if(chosenByMove.length === 2) {
@@ -120,7 +119,7 @@ function pickCard(card) {
       const carta1 = chosenByMove[0];
       const carta2 = chosenByMove[1];
 
-      if(carta1.children[0].name === carta2.children[0].name) {   
+      if(carta1.querySelector(".back-card").name === carta2.querySelector(".back-card").name) {   
         carta1.removeAttribute("onclick")
         carta2.removeAttribute("onclick");
         foundPairs++;
