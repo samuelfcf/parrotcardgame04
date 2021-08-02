@@ -75,11 +75,7 @@ function loadGame() {
   }
 
   for(let i = 0; i < numCards; i++) {
-    if(i % 2 == 0) {
       cards.push(deck[i]);
-    } else {
-      cards.push(deck[i]);
-    }
   }
 
   cardsSort = cards.sort(() => {
